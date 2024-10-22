@@ -1,0 +1,19 @@
+{
+  "database": {
+    "host": "db",
+    "port": "5432",
+    "user": "myuser",
+    "password": "mypassword",
+    "dbname": "mydatabase",
+    "sslmode": "disable",
+    "max_retries": 10,
+    "retry_interval_seconds": 2
+  },
+  "server": {
+    "port": "8080"
+  },
+  "logging": {
+    "level": "info",
+    "formatter": "json"
+  }
+}

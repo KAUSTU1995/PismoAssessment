@@ -1,0 +1,167 @@
+basePath: /
+definitions:
+  errors.ErrorResponse:
+    properties:
+      code:
+        description: |-
+          The HTTP status code of the error.
+          example: 404
+        type: integer
+      message:
+        description: |-
+          A detailed error message.
+          example: "Account not found"
+        type: string
+    type: object
+  models.Account:
+    description: Account model for managing account information.
+    properties:
+      account_id:
+        description: |-
+          AccountID is the unique identifier for the account.
+          @example 1
+        type: integer
+      document_number:
+        description: |-
+          DocumentNumber is the document number associated with the account.
+          @example "12345678900"
+          @validate required,len=11
+        type: string
+    required:
+    - document_number
+    type: object
+  models.Transaction:
+    description: Transaction model for managing transaction information.
+    properties:
+      account_id:
+        description: |-
+          AccountID is the identifier for the associated account.
+          @example 1
+        type: integer
+      amount:
+        description: |-
+          Amount is the amount involved in the transaction.
+          @example 100.50
+        type: number
+      event_date:
+        description: |-
+          EventDate is the date of the transaction event.
+          @example "2024-10-22T15:04:05Z"
+        type: string
+      operation_type_id:
+        description: |-
+          OperationTypeID is the identifier for the type of operation performed.
+          @example 2
+        type: integer
+      transaction_id:
+        description: |-
+          TransactionID is the unique identifier for the transaction.
+          @example 1
+        type: integer
+    required:
+    - account_id
+    - amount
+    - operation_type_id
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: kaustubh.agarrwal@gmail.com
+    name: Kaustubh Agarwal
+  description: This is the API documentation for the Pismo Assessment project, providing
+    endpoints for account and transaction management.
+  title: PismoAssessment API
+  version: "1.0"
+paths:
+  /v1/accounts:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Account information
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/models.Account'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful account creation
+          schema:
+            $ref: '#/definitions/models.Account'
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      summary: Create a new account
+      tags:
+      - accounts
+  /v1/accounts/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Fetches the account details for the specified account ID.
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/models.Account'
+        "400":
+          description: Invalid ID supplied
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "404":
+          description: Account not found
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      summary: Get account information by ID
+      tags:
+      - accounts
+  /v1/transactions:
+    post:
+      consumes:
+      - application/json
+      description: Initiates a transaction for a specified account, operation type,
+        and amount.
+      parameters:
+      - description: Transaction information
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/models.Transaction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful transaction creation
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "400":
+          description: Invalid input data
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      summary: Create a new transaction
+      tags:
+      - transactions
+schemes:
+- http
+swagger: "2.0"
